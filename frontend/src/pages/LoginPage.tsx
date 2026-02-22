@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from 'react'
+import { type FormEvent, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { getUsername, saveUsername } from '../lib/userStore'
 
@@ -28,7 +28,7 @@ export const LoginPage = ({ isDarkMode }: LoginPageProps) => {
     void loadSavedUser()
   }, [])
 
-  const onSubmit = async (event: FormEvent) => {
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     const normalizedName = name.trim()
