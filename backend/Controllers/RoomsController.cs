@@ -78,6 +78,62 @@ public sealed class RoomsController(IRoomService roomService, IConfiguration con
             return NotFound();
         }
 
-        return Ok(new { player, room = room.ToResponse() });
+        var playerResponse = new PlayerResponse(
+            player.Id,
+            player.Name,
+            player.IsHost,
+            player.JoinedAtUtc,
+            player.Team.ToString(),
+            player.Role.ToString());
+
+        return Ok(new { player = playerResponse, room = room.ToResponse() });
+    }
+
+    [HttpPost("{roomId:guid}/players/{playerId:guid}/assignment")]
+    public IActionResult UpdateAssignment(Guid roomId, Guid playerId, [FromBody] UpdatePlayerAssignmentRequest request)
+    {
+        if (!Enum.TryParse<TeamPreference>(request.Team, true, out var teamPreference))
+        {
+            return BadRequest(new { error = "Invalid team. Use Random, Red or Blue." });
+        }
+
+        if (!Enum.TryParse<RolePreference>(request.Role, true, out var rolePreference))
+        {
+            return BadRequest(new { error = "Invalid role. Use Operative, Spymaster or Tester." });
+        }
+
+        var player = roomService.UpdatePlayerAssignment(roomId, playerId, teamPreference, rolePreference);
+        if (player == null)
+        {
+            return NotFound(new { error = "Room or player not found." });
+        }
+
+        var room = roomService.GetRoomById(roomId);
+        if (room == null)
+        {
+            return NotFound(new { error = "Room not found." });
+        }
+
+        var playerResponse = new PlayerResponse(
+            player.Id,
+            player.Name,
+            player.IsHost,
+            player.JoinedAtUtc,
+            player.Team.ToString(),
+            player.Role.ToString());
+
+        return Ok(new { player = playerResponse, room = room.ToResponse() });
+    }
+
+    [HttpPost("{roomId:guid}/randomize")]
+    public IActionResult RandomizeAssignments(Guid roomId)
+    {
+        var room = roomService.RandomizeAssignments(roomId);
+        if (room == null)
+        {
+            return NotFound(new { error = "Room not found." });
+        }
+
+        return Ok(new { room = room.ToResponse() });
     }
 }
