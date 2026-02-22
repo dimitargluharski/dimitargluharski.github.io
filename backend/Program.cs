@@ -1,12 +1,19 @@
 using MyGamesPortal.Backend.Hubs;
 using MyGamesPortal.Backend.Services;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services
-builder.Services.AddControllers();
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<IRoomService, InMemoryRoomService>();
+builder.Services.AddSingleton<ICodenamesService, InMemoryCodenamesService>();
 
 var frontendOrigin = builder.Configuration["FrontendOrigin"] ?? "http://localhost:5173";
 
