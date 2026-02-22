@@ -124,8 +124,8 @@ export const LobbyPage = ({ isDarkMode }: LobbyPageProps) => {
               onClick={copyInviteCode}
               title={`Копирай: ${room.inviteCode}`}
               className={`rounded-full p-2 transition ${isDarkMode
-                  ? 'bg-slate-700 text-slate-300 hover:bg-slate-600'
-                  : 'bg-slate-200 text-slate-700 hover:bg-slate-300'
+                ? 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                : 'bg-slate-200 text-slate-700 hover:bg-slate-300'
                 }`}
             >
               🔗

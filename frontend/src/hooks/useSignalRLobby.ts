@@ -56,7 +56,7 @@ export const useSignalRLobby = () => {
       newConnection.off('PlayerLeft', handlePlayerLeft)
       newConnection.off('PlayerReadyChanged', handlePlayerReadyChanged)
       newConnection.off('GameStarted', handleGameStarted)
-      
+
       // Stop the connection
       void newConnection.stop()
     }
