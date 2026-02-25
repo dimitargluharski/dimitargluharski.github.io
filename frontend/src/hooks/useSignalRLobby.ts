@@ -11,6 +11,7 @@ export const useSignalRLobby = () => {
   const [connection, setConnection] = useState<signalR.HubConnection | null>(null)
   const [isConnected, setIsConnected] = useState(false)
   const [roomData, setRoomData] = useState<RoomDetailsDto | null>(null)
+  const [startedRoomId, setStartedRoomId] = useState<string | null>(null)
   const [hoverPointers, setHoverPointers] = useState<Record<string, string | null>>({})
   const [selectionPointers, setSelectionPointers] = useState<Record<string, string[]>>({})
 
@@ -47,6 +48,7 @@ export const useSignalRLobby = () => {
 
     const handleGameStarted = (data: { roomId: string; timestamp: string }) => {
       console.log('Game started:', data)
+      setStartedRoomId(data.roomId)
     }
 
     const handlePlayerAssignmentUpdated = (data: { playerId: string; room: RoomDetailsDto }) => {
@@ -171,6 +173,7 @@ export const useSignalRLobby = () => {
     connection,
     isConnected,
     roomData,
+    startedRoomId,
     hoverPointers,
     selectionPointers,
     joinLobby,

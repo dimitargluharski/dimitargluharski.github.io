@@ -16,7 +16,7 @@ export const LobbyPage = ({ isDarkMode }: LobbyPageProps) => {
   const [isUpdatingAssignment, setIsUpdatingAssignment] = useState(false)
   const [isRandomizing, setIsRandomizing] = useState(false)
   const [error, setError] = useState('')
-  const { joinLobby, leaveLobby, startGame, updatePlayerAssignment, randomizeAssignments, roomData, isConnected } = useSignalRLobby()
+  const { joinLobby, leaveLobby, startGame, updatePlayerAssignment, randomizeAssignments, roomData, startedRoomId, isConnected } = useSignalRLobby()
 
   const playerId = localStorage.getItem('currentPlayerId') || ''
   const currentPlayer = room?.players.find(p => p.playerId === playerId)
@@ -76,6 +76,12 @@ export const LobbyPage = ({ isDarkMode }: LobbyPageProps) => {
       setRoom(roomData)
     }
   }, [roomData])
+
+  useEffect(() => {
+    if (roomId && startedRoomId === roomId) {
+      navigate(`/game/${roomId}`)
+    }
+  }, [startedRoomId, roomId, navigate])
 
   const handleStartGame = async () => {
     if (roomId) {
