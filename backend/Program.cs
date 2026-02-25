@@ -10,13 +10,20 @@ builder.Services.AddSignalR(); // ЗАПАЗВАМЕ ГО
 builder.Services.AddSingleton<IRoomService, InMemoryRoomService>();
 
 // --- CORS ---
-var frontendOrigin = builder.Configuration["FrontendOrigin"] ?? "http://localhost:5173";
+var configuredOrigins = builder.Configuration.GetSection("FrontendOrigins").Get<string[]>();
+var frontendOrigins = configuredOrigins is { Length: > 0 }
+    ? configuredOrigins
+    : [
+        builder.Configuration["FrontendOrigin"] ?? "http://localhost:5173",
+        "https://dimitargluharski.github.io"
+    ];
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policyBuilder =>
     {
         policyBuilder
-            .WithOrigins(frontendOrigin)
+            .WithOrigins(frontendOrigins)
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials(); // ЗАДЪЛЖИТЕЛНО за SignalR
