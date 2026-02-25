@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddSignalR(); // ЗАПАЗВАМЕ ГО
 builder.Services.AddSingleton<IRoomService, InMemoryRoomService>();
+builder.Services.AddSingleton<ICodenamesService, InMemoryCodenamesService>();
 
 // --- CORS ---
 var configuredOrigins = builder.Configuration.GetSection("FrontendOrigins").Get<string[]>();
