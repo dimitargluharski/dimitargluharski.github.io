@@ -177,6 +177,43 @@ export const GamePage = ({ isDarkMode }: GamePageProps) => {
   }, [roomId, activePlayer?.role, activePlayer?.team, isTesterDebugEnabled, shouldRevealKey, showTesterMode])
 
   useEffect(() => {
+    if (!roomId) {
+      return
+    }
+
+    let isDisposed = false
+
+    const syncGameState = async () => {
+      try {
+        const [latestRoom, latestGame] = await Promise.all([
+          roomsApi.getRoomById(roomId),
+          roomsApi.getCodenamesGame(roomId, shouldRevealKey)
+        ])
+
+        if (isDisposed) {
+          return
+        }
+
+        setRoom(latestRoom)
+        setGame(latestGame)
+      } catch {
+        // Keep last good snapshot during transient network issues.
+      }
+    }
+
+    const intervalId = window.setInterval(() => {
+      void syncGameState()
+    }, 1000)
+
+    void syncGameState()
+
+    return () => {
+      isDisposed = true
+      window.clearInterval(intervalId)
+    }
+  }, [roomId, shouldRevealKey])
+
+  useEffect(() => {
     setHoveredWord(null)
     setGuessFeedback(null)
     setCorrectGuessesInTurn(0)
