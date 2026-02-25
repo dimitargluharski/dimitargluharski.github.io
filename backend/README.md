@@ -92,7 +92,7 @@ GET /api/rooms/{roomId}
 
 ## SignalR Hub Events
 
-**Endpoint:** `ws://localhost:5000/hub/lobby`
+**Endpoint:** `ws://localhost:5000/`
 
 ### Client → Server
 

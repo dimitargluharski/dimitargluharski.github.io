@@ -33,7 +33,7 @@
 
 // app.UseCors("AllowFrontend");
 // app.MapControllers();
-// app.MapHub<LobbyHub>("/hub/lobby");
+// app.MapHub<LobbyHub>("/");
 
 // app.Run();
 
@@ -85,11 +85,11 @@ app.UseSwaggerUI(c => {
 });
 
 // Тази точка спира 404 грешката и ти казва, че сървърът е ОК
-app.MapGet("/", () => Results.Content("<h1>Backend is Running Successfully!</h1>", "text/html"));
+app.MapGet("/health", () => Results.Content("<h1>Backend is Running Successfully!</h1>", "text/html"));
 
 // --- ПРИЛАГАНЕ НА ТВОИТЕ МАРШРУТИ ---
 app.UseCors("AllowFrontend");
 app.MapControllers();
-app.MapHub<LobbyHub>("/hub/lobby");
+app.MapHub<LobbyHub>("/");
 
 app.Run();

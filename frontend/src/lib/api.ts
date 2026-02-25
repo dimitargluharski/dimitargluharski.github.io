@@ -1,4 +1,5 @@
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5000/api'
+const BACKEND_BASE_URL = (import.meta.env.VITE_BACKEND_URL || 'https://my-games-backend-nmx5.onrender.com').replace(/\/+$/, '')
+const API_BASE = import.meta.env.VITE_API_BASE || `${BACKEND_BASE_URL}/api`
 
 export type CardTeam = 'Red' | 'Blue' | 'Neutral' | 'Assassin'
 export type GamePhase = 'SpymasterClue' | 'TeamGuessing' | 'GameOver'

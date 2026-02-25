@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import * as signalR from '@microsoft/signalr'
 import type { RoomDetailsDto } from '../lib/api'
 
-const signalRFromApiBase = import.meta.env.VITE_API_BASE?.replace(/\/api\/?$/, '/hub/lobby')
-const SIGNALR_URL = import.meta.env.VITE_SIGNALR_URL || signalRFromApiBase || 'https://my-games-backend-nmx5.onrender.com/hub/lobby'
+const BACKEND_BASE_URL = (import.meta.env.VITE_BACKEND_URL || 'https://my-games-backend-nmx5.onrender.com').replace(/\/+$/, '')
+const SIGNALR_URL = import.meta.env.VITE_SIGNALR_URL || BACKEND_BASE_URL
 
 export type RoomEvent = 'PlayerJoined' | 'PlayerLeft' | 'PlayerReadyChanged' | 'GameStarted'
 

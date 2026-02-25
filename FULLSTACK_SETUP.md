@@ -72,8 +72,7 @@ Frontend starts at: `http://localhost:5173`
 
 ### Frontend (`.env.local`)
 ```
-VITE_API_BASE=http://localhost:5000/api
-VITE_SIGNALR_URL=http://localhost:5000/hub/lobby
+VITE_BACKEND_URL=https://my-games-backend-nmx5.onrender.com
 ```
 
 ### Backend (`appsettings.Development.json`)
