@@ -76,6 +76,10 @@ export interface RandomizeAssignmentsResponse {
   room: RoomDetailsDto
 }
 
+export interface CodenamesStatusResponse {
+  started: boolean
+}
+
 export const roomsApi = {
   async createRoom(gameKey: string, hostName?: string): Promise<CreateRoomResponse> {
     const response = await fetch(`${API_BASE}/rooms`, {
@@ -163,6 +167,16 @@ export const roomsApi = {
 
     if (!response.ok) {
       throw new Error(`Failed to start game: ${response.statusText}`)
+    }
+
+    return response.json()
+  },
+
+  async getCodenamesGameStatus(roomId: string): Promise<CodenamesStatusResponse> {
+    const response = await fetch(`${API_BASE}/rooms/${roomId}/codenames/status`)
+
+    if (!response.ok) {
+      throw new Error(`Failed to load game status: ${response.statusText}`)
     }
 
     return response.json()

@@ -8,6 +8,13 @@ namespace MyGamesPortal.Backend.Controllers;
 [Route("api/rooms/{roomId:guid}/codenames")]
 public sealed class CodenamesController(ICodenamesService codenamesService) : ControllerBase
 {
+    [HttpGet("status")]
+    public IActionResult GetGameStatus(Guid roomId)
+    {
+        var started = codenamesService.GetGame(roomId) != null;
+        return Ok(new { started });
+    }
+
     [HttpPost("start")]
     public IActionResult StartGame(Guid roomId)
     {

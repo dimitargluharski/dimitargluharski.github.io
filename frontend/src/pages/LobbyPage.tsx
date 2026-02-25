@@ -94,13 +94,13 @@ export const LobbyPage = ({ isDarkMode }: LobbyPageProps) => {
 
     const checkIfGameStarted = async () => {
       try {
-        await roomsApi.getCodenamesGame(roomId, false)
-        if (!isDisposed) {
+        const status = await roomsApi.getCodenamesGameStatus(roomId)
+        if (!isDisposed && status.started) {
           shouldLeaveLobbyRef.current = false
           navigate(`/game/${roomId}`)
         }
       } catch {
-        // Game is not started yet (or temporary network error). Keep user in lobby.
+        // Temporary network error. Keep user in lobby.
       }
     }
 
