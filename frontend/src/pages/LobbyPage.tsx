@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams, useNavigate } from 'react-router'
 import Swal from 'sweetalert2'
 import { useSignalRLobby } from '../hooks/useSignalRLobby'
@@ -11,6 +11,7 @@ type LobbyPageProps = {
 export const LobbyPage = ({ isDarkMode }: LobbyPageProps) => {
   const { roomId } = useParams<{ roomId: string }>()
   const navigate = useNavigate()
+  const shouldLeaveLobbyRef = useRef(true)
   const [room, setRoom] = useState<RoomDetailsDto | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isUpdatingAssignment, setIsUpdatingAssignment] = useState(false)
@@ -59,7 +60,7 @@ export const LobbyPage = ({ isDarkMode }: LobbyPageProps) => {
     void loadRoom()
 
     return () => {
-      if (playerId && roomId) {
+      if (shouldLeaveLobbyRef.current && playerId && roomId) {
         void leaveLobby(roomId, playerId)
       }
     }
@@ -79,15 +80,48 @@ export const LobbyPage = ({ isDarkMode }: LobbyPageProps) => {
 
   useEffect(() => {
     if (roomId && startedRoomId === roomId) {
+      shouldLeaveLobbyRef.current = false
       navigate(`/game/${roomId}`)
     }
   }, [startedRoomId, roomId, navigate])
+
+  useEffect(() => {
+    if (!roomId) {
+      return
+    }
+
+    let isDisposed = false
+
+    const checkIfGameStarted = async () => {
+      try {
+        await roomsApi.getCodenamesGame(roomId, false)
+        if (!isDisposed) {
+          shouldLeaveLobbyRef.current = false
+          navigate(`/game/${roomId}`)
+        }
+      } catch {
+        // Game is not started yet (or temporary network error). Keep user in lobby.
+      }
+    }
+
+    const intervalId = window.setInterval(() => {
+      void checkIfGameStarted()
+    }, 2500)
+
+    void checkIfGameStarted()
+
+    return () => {
+      isDisposed = true
+      window.clearInterval(intervalId)
+    }
+  }, [roomId, navigate])
 
   const handleStartGame = async () => {
     if (roomId) {
       try {
         await roomsApi.startCodenamesGame(roomId)
         await startGame(roomId)
+        shouldLeaveLobbyRef.current = false
         navigate(`/game/${roomId}`)
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Неуспешен старт на играта')
