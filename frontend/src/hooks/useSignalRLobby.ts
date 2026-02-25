@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import * as signalR from '@microsoft/signalr'
 import type { RoomDetailsDto } from '../lib/api'
 
-const SIGNALR_URL = import.meta.env.VITE_SIGNALR_URL || 'http://localhost:5000/hub/lobby'
+const signalRFromApiBase = import.meta.env.VITE_API_BASE?.replace(/\/api\/?$/, '/hub/lobby')
+const SIGNALR_URL = import.meta.env.VITE_SIGNALR_URL || signalRFromApiBase || 'https://my-games-backend-nmx5.onrender.com/hub/lobby'
 
 export type RoomEvent = 'PlayerJoined' | 'PlayerLeft' | 'PlayerReadyChanged' | 'GameStarted'
 
