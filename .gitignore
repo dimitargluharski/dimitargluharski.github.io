@@ -1,0 +1,32 @@
+# Build artifacts
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+
+# .NET
+*.user
+*.suo
+*.sln.docstates
+.vs/
+
+# Frontend
+node_modules/
+package-lock.json
+dist/
+
+# Environment
+.env.local
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
